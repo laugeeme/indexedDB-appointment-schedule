@@ -109,9 +109,19 @@ document.addEventListener('DOMContentLoaded', () => {
             <p class="font-weight-bold">Hora: <span class="font-weight-normal">${cursor.value.hora}</span></p> 
             <p class="font-weight-bold">Síntomas: <span class="font-weight-normal">${cursor.value.sintomas}</span></p>
         `;
+        //create delete button
+        const deleteBtn = document.createElement('button');
+        deleteBtn.classList.add('borrar', 'btn', 'btn-danger');
+        deleteBtn.innerHTML = '<span aria-hidden="true"></span>Borrar';
+        deleteBtn.onClick = deleteAppointment;
+        appointmentHTML.appendChild(deleteBtn);
+
+        //append in the parent element
         appointments.appendChild(appointmentHTML);
+
         //consult next registers
         cursor.continue();
+
       } else {
         // eslint-disable-next-line no-lonely-if
         if (!appointments.firstChild) {
@@ -126,5 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     };
+  }
+
+  function deleteAppointment(e) {
+    let appointmentID = e.target.parentElement.getAttribute('data-cita-id');
   }
 });
