@@ -110,7 +110,20 @@ document.addEventListener('DOMContentLoaded', () => {
             <p class="font-weight-bold">Síntomas: <span class="font-weight-normal">${cursor.value.sintomas}</span></p>
         `;
         appointments.appendChild(appointmentHTML);
+        //consult next registers
         cursor.continue();
+      } else {
+        // eslint-disable-next-line no-lonely-if
+        if (!appointments.firstChild) {
+          //when there is no registers
+          adminHeading.textContent = 'Agrega citas para comenzar';
+          let list = document.createElement('p');
+          list.classList.add('text-center');
+          list.textContent = 'No hay registros';
+          appointments.appendChild(list);
+        } else {
+          adminHeading.textContent = 'Administra tus citas';
+        }
       }
     };
   }
