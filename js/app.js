@@ -65,6 +65,19 @@ document.addEventListener('DOMContentLoaded', () => {
       sintomas: symptoms.value,
     };
 
-    console.log(newAppointment);
+    //use transactions in indexedDB
+    let transaction = DB.transaction(['citas'], 'readwrite');
+    let objectStore = transaction.objectStore('citas');
+    let request = objectStore.add(newAppointment);
+
+    request.onsuccess = () => {
+      form.reset();
+    };
+    transaction.oncomplete = () => {
+      console.log('Cita agregada');
+    };
+    transaction.onerror = () => {
+      console.log('Hubo un error');
+    };
   }
 });
