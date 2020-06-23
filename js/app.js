@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
   createDB.onsuccess = function () {
     //asign to data base
     DB = createDB.result;
+
+    showAppointments();
   };
 
   //create schema, it only runs once
@@ -78,6 +80,33 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     transaction.onerror = () => {
       console.log('Hubo un error');
+    };
+  }
+
+  function showAppointments() {
+    //clean previous appointments
+    while (appointments.firstChild) {
+      appointments.removeChild(appointments.firstChild);
+    }
+
+    //create objectStore
+    let objectStore = DB.transaction('citas').objectStore('citas');
+    //return a request
+    objectStore.openCursor().onsuccess = function (e) {
+      //cursor is positioned in the indicated record to acces the data
+      let cursor = e.target.result;
+      if (cursor) {
+        let appointmentHTML = document.createElement('li');
+        appointmentHTML.setAttribute('data-cita-id', cursor.value.key);
+        appointmentHTML.classList.add('list-group-item');
+
+        appointmentHTML.innerHTML = `
+            <p class="font-weight-bold">Mascota: <span class="font-weight-normal">${cursor.value.mascota}</span></p>
+        
+        `;
+        appointments.appendChild(appointmentHTML);
+        cursor.continue();
+      }
     };
   }
 });
