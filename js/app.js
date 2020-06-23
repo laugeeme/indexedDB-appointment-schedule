@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const deleteBtn = document.createElement('button');
         deleteBtn.classList.add('borrar', 'btn', 'btn-danger');
         deleteBtn.innerHTML = '<span aria-hidden="true"></span>Borrar';
-        deleteBtn.onClick = deleteAppointment;
+        deleteBtn.onclick = deleteAppointment;
         appointmentHTML.appendChild(deleteBtn);
 
         //append in the parent element
@@ -121,7 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         //consult next registers
         cursor.continue();
-
       } else {
         // eslint-disable-next-line no-lonely-if
         if (!appointments.firstChild) {
@@ -139,6 +138,27 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function deleteAppointment(e) {
-    let appointmentID = e.target.parentElement.getAttribute('data-cita-id');
+    let appointmentID = Number(
+      e.target.parentElement.getAttribute('data-cita-id')
+    );
+
+    let transaction = DB.transaction(['citas'], 'readwrite');
+    let objectStore = transaction.objectStore('citas');
+    let request = objectStore.delete(1);
+
+    transaction.oncomplete = () => {
+      e.target.parentElement.parentElement.removeChild(e.target.parentElement);
+
+      if (!appointments.firstChild) {
+        //when there is no registers
+        adminHeading.textContent = 'Agrega citas para comenzar';
+        let list = document.createElement('p');
+        list.classList.add('text-center');
+        list.textContent = 'No hay registros';
+        appointments.appendChild(list);
+      } else {
+        adminHeading.textContent = 'Administra tus citas';
+      }
+    };
   }
 });
