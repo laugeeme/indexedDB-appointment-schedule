@@ -48,4 +48,23 @@ document.addEventListener('DOMContentLoaded', () => {
     objectStore.createIndex('hora', 'hora', { unique: false });
     objectStore.createIndex('sintomas', 'sintomas', { unique: false });
   };
+
+  //when form is submited call addData to add data in database
+  form.addEventListener('submit', addData);
+
+  function addData(e) {
+    e.preventDefault();
+
+    //object saved in data base with all info from the appointment
+    const newAppointment = {
+      mascota: petName.value,
+      cliente: clientName.value,
+      telefono: phone.value,
+      fecha: date.value,
+      hora: hour.value,
+      sintomas: symptoms.value,
+    };
+
+    console.log(newAppointment);
+  }
 });
